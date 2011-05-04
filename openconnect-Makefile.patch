@@ -1,19 +1,19 @@
-diff -urN openconnect-2.11/Makefile openconnect-2.11.new/Makefile
---- openconnect-2.11/Makefile	2009-11-17 16:01:13.000000000 +0100
-+++ openconnect-2.11.new/Makefile	2009-11-28 19:04:08.049921000 +0100
-@@ -15,35 +15,35 @@
+--- openconnect-3.02/Makefile.orig	2011-05-04 18:53:39.109630396 +0200
++++ openconnect-3.02/Makefile	2011-05-04 17:45:05.059718203 +0200
+@@ -15,23 +15,23 @@ endif
  # dir; there's no need to install it anywhere (we link it statically).
  ifdef OPENSSL
  SSL_CFLAGS += -I$(OPENSSL)/include
--SSL_LDFLAGS += -lz $(OPENSSL)/libssl.a $(OPENSSL)/libcrypto.a -ldl
-+SSL_LIBS += -lz $(OPENSSL)/libssl.a $(OPENSSL)/libcrypto.a -ldl
+-SSL_LDFLAGS += $(OPENSSL)/libssl.a $(OPENSSL)/libcrypto.a
++SSL_LIBS += $(OPENSSL)/libssl.a $(OPENSSL)/libcrypto.a
  else
- ifeq ($(wildcard /usr/include/openssl),)
- $(error "No OpenSSL in /usr/include/openssl. Cannot continue");
+ SSL_CFLAGS += $(shell pkg-config --cflags libssl)
+-SSL_LDFLAGS += $(shell pkg-config --libs libssl)
+-ifeq ($(SSL_LDFLAGS),)
++SSL_LIBS += $(shell pkg-config --libs libssl)
++ifeq ($(SSL_LIBS),)
+ $(error "No OpenSSL support. Cannot continue");
  endif
- SSL_CFLAGS += -I/usr/include/openssl
--SSL_LDFLAGS += -lcrypto -lssl
-+SSL_LIBS += -lcrypto -lssl
  endif
  
  XML2_CFLAGS += $(shell xml2-config --cflags) 
@@ -24,56 +24,27 @@ diff -urN openconnect-2.11/Makefile openconnect-2.11.new/Makefile
  $(error "No libxml2 support. Cannot continue");
  endif
  
- GTK_CFLAGS += $(shell pkg-config --cflags gtk+-x11-2.0 gthread-2.0 2>/dev/null)
--GTK_LDFLAGS += $(shell pkg-config --libs gtk+-x11-2.0 gthread-2.0 2>/dev/null)
--ifeq ($(GTK_LDFLAGS),)
-+GTK_LIBS += $(shell pkg-config --libs gtk+-x11-2.0 gthread-2.0 2>/dev/null)
-+ifeq ($(GTK_LIBS),)
- MISSINGPKGS += gtk+-x11-2.0
- endif
- 
- GCONF_CFLAGS += $(shell pkg-config --cflags gconf-2.0 2>/dev/null)
--GCONF_LDFLAGS += $(shell pkg-config --libs gconf-2.0 2>/dev/null)
--ifeq ($(GCONF_LDFLAGS),)
-+GCONF_LIBS += $(shell pkg-config --libs gconf-2.0 2>/dev/null)
-+ifeq ($(GCONF_LIBS),)
- MISSINGPKGS += gconf-2.0
- endif
- 
  CFLAGS := $(OPT_FLAGS) $(SSL_CFLAGS) $(XML2_CFLAGS) $(EXTRA_CFLAGS)
--LDFLAGS := $(SSL_LDFLAGS) $(XML2_LDFLAGS) $(EXTRA_LDFLAGS)
-+LIBS := $(SSL_LIBS) $(XML2_LIBS) $(EXTRA_LIBS)
+-LDFLAGS := -lz $(SSL_LDFLAGS) $(XML2_LDFLAGS) $(EXTRA_LDFLAGS)
++LIBS := -lz $(SSL_LIBS) $(XML2_LIBS) $(EXTRA_LIBS)
  
  ifdef SSL_UI
  CFLAGS += -DSSL_UI
-@@ -67,7 +67,7 @@
+@@ -45,7 +45,7 @@ endif
+ 
+ ifneq ($(LIBPROXY_HDR),)
+ CFLAGS += -DOPENCONNECT_LIBPROXY -DLIBPROXY_HDR=\"$(LIBPROXY_HDR)\"
+-LDFLAGS += -lproxy
++LIBS += -lproxy
+ endif
+ 
+ OPENCONNECT_OBJS := xml.o main.o $(SSL_UI)
+@@ -68,7 +68,7 @@ version.c: $(patsubst %.o,%.c,$(VERSION_
  	@./version.sh
  
- openconnect: $(OPENCONNECT_OBJS) $(CONNECTION_OBJS) $(AUTH_OBJECTS)
+ openconnect: $(OPENCONNECT_OBJS) $(CONNECTION_OBJS) libopenconnect.a
 -	$(CC) -o $@ $^ $(LDFLAGS)
 +	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
  
- ifeq ($(MISSINGPKGS),)
- maybe-auth-dialog: nm-openconnect-auth-dialog
-@@ -77,7 +77,7 @@
- endif
- 
- nm-openconnect-auth-dialog: nm-auth-dialog.o $(AUTH_OBJECTS)
--	$(CC) -o $@ $^ $(LDFLAGS) $(GTK_LDFLAGS) $(GCONF_LDFLAGS) $(XML2_LDFLAGS)
-+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS) $(GTK_LIBS) $(GCONF_LIBS) $(XML2_LIBS)
- 
  %.o: %.c
  	$(CC) -c -o $@ $(CFLAGS) $(CFLAGS_$@) $< -MD -MF .$@.dep
-@@ -92,10 +92,10 @@
- 	rm -f *~
- 
- install: all
--	mkdir -p $(DESTDIR)/usr/bin $(DESTDIR)/usr/libexec
-+	mkdir -p $(DESTDIR)/usr/bin $(DESTDIR)$(LIBDIR)
- 	install -m0755 openconnect $(DESTDIR)/usr/bin
- ifeq ($(MISSINGPKGS),)
--	install -m0755 nm-openconnect-auth-dialog $(DESTDIR)/usr/libexec
-+	install -m0755 nm-openconnect-auth-dialog $(DESTDIR)$(LIBDIR)
- endif
- 
- include /dev/null $(wildcard .*.o.dep)
