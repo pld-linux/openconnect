@@ -1,14 +1,15 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN
 Name:		openconnect
-Version:	3.02
+Version:	3.11
 Release:	1
 License:	LGPL v2
 Group:		Applications
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	c12688474f432a6d590958cc1c1ff076
-Patch0:		%{name}-Makefile.patch
+# Source0-md5:	b66927f98cfeb577b3016f8b83005d6b
 URL:		http://www.infradead.org/openconnect.html
+BuildRequires:	autoconf >= 2.63
+BuildRequires:	automake >= 1:1.10
 BuildRequires:	libproxy-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	openssl-devel
@@ -25,6 +26,7 @@ OpenConnect jest klientem Cisco AnyConnect SSL VPN.
 Summary:	Development files for OpenConnect
 Summary(pl.UTF-8):	Pliki programistyczne dla OpenConnect
 Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
 Requires:	libproxy-devel
 Requires:	libxml2-devel
 Requires:	openssl-devel
@@ -38,9 +40,13 @@ Pliki programistyczne dla OpenConnect.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
+%{__libtoolize}
+%{__aclocal}
+%{__autoconf}
+%{__automake}
+%configure
 %{__make} \
 	CC="%{__cc}" \
 	RPM_OPT_FLAGS="%{rpmcppflags} %{rpmcflags}" \
@@ -49,21 +55,26 @@ Pliki programistyczne dla OpenConnect.
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install install-lib \
+%{__make} install \
 	LIBDIR=%{_libdir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
+
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS README.DTLS README.SecurID TODO
+%doc AUTHORS TODO
 %attr(755,root,root) %{_bindir}/openconnect
+%attr(755,root,root) %{_libdir}/libopenconnect.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libopenconnect.so.1
 %{_mandir}/man8/openconnect.8*
 
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/libopenconnect.a
+%attr(755,root,root) %{_libdir}/libopenconnect.so
 %{_includedir}/openconnect.h
 %{_pkgconfigdir}/openconnect.pc
