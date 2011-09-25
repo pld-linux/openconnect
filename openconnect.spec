@@ -1,19 +1,24 @@
+#
+# Conditional build:
+%bcond_without	static_libs	# static library
+#
 Summary:	Client for Cisco's AnyConnect SSL VPN
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN
 Name:		openconnect
 Version:	3.12
 Release:	1
-License:	LGPL v2
-Group:		Applications
+License:	LGPL v2.1
+Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
 # Source0-md5:	2f4fceb3f921ca8deb3a7cbd19a5e008
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
 BuildRequires:	libproxy-devel
-BuildRequires:	libxml2-devel
+BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
+BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -23,20 +28,32 @@ OpenConnect is a client for Cisco's AnyConnect SSL VPN.
 OpenConnect jest klientem Cisco AnyConnect SSL VPN.
 
 %package devel
-Summary:	Development files for OpenConnect
-Summary(pl.UTF-8):	Pliki programistyczne dla OpenConnect
+Summary:	Development files for OpenConnect library
+Summary(pl.UTF-8):	Pliki programistyczne biblioteki OpenConnect
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	libproxy-devel
-Requires:	libxml2-devel
+Requires:	libxml2-devel >= 2.0
 Requires:	openssl-devel
 Requires:	zlib-devel
 
 %description devel
-Development files for OpenConnect.
+Development files for OpenConnect library.
 
 %description devel -l pl.UTF-8
-Pliki programistyczne dla OpenConnect.
+Pliki programistyczne biblioteki OpenConnect.
+
+%package static
+Summary:	Static OpenConnect library
+Summary(pl.UTF-8):	Statyczna biblioteka OpenConnect
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+Static OpenConnect library.
+
+%description static -l pl.UTF-8
+Statyczna biblioteka OpenConnect.
 
 %prep
 %setup -q
@@ -46,18 +63,18 @@ Pliki programistyczne dla OpenConnect.
 %{__aclocal}
 %{__autoconf}
 %{__automake}
-%configure
-%{__make} \
-	CC="%{__cc}" \
-	RPM_OPT_FLAGS="%{rpmcppflags} %{rpmcflags}" \
-	LDFLAGS="%{rpmldflags}"
+%configure \
+	%{?with_static_libs:--enable-static}
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	LIBDIR=%{_libdir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -78,3 +95,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libopenconnect.so
 %{_includedir}/openconnect.h
 %{_pkgconfigdir}/openconnect.pc
+
+%if %{with static_libs}
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libopenconnect.a
+%endif
