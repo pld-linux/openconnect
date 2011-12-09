@@ -5,12 +5,12 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN
 Name:		openconnect
-Version:	3.13
+Version:	3.15
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	4364a779bfce66de243f39eeb7a39c1f
+# Source0-md5:	94245f4bac42a288100becab0b4ca29a
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
@@ -87,7 +87,7 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS TODO
-%attr(755,root,root) %{_bindir}/openconnect
+%attr(755,root,root) %{_sbindir}/openconnect
 %attr(755,root,root) %{_libdir}/libopenconnect.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopenconnect.so.1
 %{_datadir}/openconnect
