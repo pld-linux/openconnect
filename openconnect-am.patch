@@ -1,0 +1,11 @@
+--- openconnect-4.00/po/Makefile.am.orig	2012-06-15 15:52:26.000000000 +0200
++++ openconnect-4.00/po/Makefile.am	2012-06-24 10:13:09.807352601 +0200
+@@ -17,7 +17,7 @@
+ 	linguas="$(LINGUAS)"; \
+ 	for l in $$linguas; do \
+ 	  dir="$(DESTDIR)$(localedir)/$$l/LC_MESSAGES"; \
+-	  $(mkdir_p) $$dir; \
++	  $(MKDIR_P) $$dir; \
+ 	  echo Installing $$l.mo to $$dir/$(PACKAGE).mo ; \
+ 	  $(INSTALL_DATA) $$l.mo $$dir/$(PACKAGE).mo; \
+ 	done
