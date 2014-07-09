@@ -8,14 +8,13 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN
 Name:		openconnect
-Version:	5.03
+Version:	6.00
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	ff43ed1dbaccd2537fd7c5bfb04295a6
+# Source0-md5:	7e28e23c6e281be31446e6c365f5d273
 Patch0:		%{name}-am.patch
-Patch1:		%{name}-link.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
@@ -27,6 +26,7 @@ BuildRequires:	libxml2-devel >= 2.0
 %{!?with_openssl:BuildRequires:	p11-kit-devel}
 BuildRequires:	pkgconfig >= 1:0.27
 %{?with_stoken:BuildRequires:	stoken-devel}
+%{!?with_openssl:BuildRequires:	trousers-devel}
 BuildRequires:	zlib-devel
 Suggests:	vpnc-script
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -45,8 +45,10 @@ Requires:	%{name} = %{version}-%{release}
 %{?with_openssl:Requires:	gnutls-devel >= 2.12.16}
 Requires:	libproxy-devel
 Requires:	libxml2-devel >= 2.0
+%{?with_oath:Requires:	oath-toolkit-devel}
 %{?with_openssl:Requires:	openssl-devel}
 %{!?with_openssl:Requires:	p11-kit-devel}
+%{?with_stoken:Requires:	stoken-devel}
 Requires:	zlib-devel
 
 %description devel
@@ -70,7 +72,6 @@ Statyczna biblioteka OpenConnect.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -109,7 +110,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS TODO
 %attr(755,root,root) %{_sbindir}/openconnect
 %attr(755,root,root) %{_libdir}/libopenconnect.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libopenconnect.so.2
+%attr(755,root,root) %ghost %{_libdir}/libopenconnect.so.3
 %{_mandir}/man8/openconnect.8*
 
 %files devel
