@@ -8,15 +8,15 @@
 %bcond_without	stoken		# Software Token authentication
 %bcond_without	static_libs	# static library
 #
-Summary:	Client for Cisco's AnyConnect SSL VPN
-Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN
+Summary:	Client for Cisco's AnyConnect SSL VPN and Pulse Connect Secure
+Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN i Pulse Connect Secure
 Name:		openconnect
-Version:	7.04
+Version:	7.05
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	828fe81388b7ea1155419b8be64a350f
+# Source0-md5:	10cd4f61e8a11cdf793da2b0fd7a6003
 Patch0:		%{name}-am.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
@@ -41,10 +41,12 @@ Suggests:	vpnc-script
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-OpenConnect is a client for Cisco's AnyConnect SSL VPN.
+OpenConnect is a client for Cisco's AnyConnect SSL VPN and
+Pulse Connect Secure
 
 %description -l pl.UTF-8
-OpenConnect jest klientem Cisco AnyConnect SSL VPN.
+OpenConnect jest klientem Cisco AnyConnect SSL VPN
+i Pulse Connect Secure
 
 %package devel
 Summary:	Development files for OpenConnect library
