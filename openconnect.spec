@@ -41,12 +41,12 @@ Suggests:	vpnc-script
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-OpenConnect is a client for Cisco's AnyConnect SSL VPN and
-Pulse Connect Secure
+OpenConnect is a client for Cisco's AnyConnect SSL VPN and Pulse
+Connect Secure.
 
 %description -l pl.UTF-8
-OpenConnect jest klientem Cisco AnyConnect SSL VPN
-i Pulse Connect Secure
+OpenConnect jest klientem Cisco AnyConnect SSL VPN i Pulse Connect
+Secure.
 
 %package devel
 Summary:	Development files for OpenConnect library
