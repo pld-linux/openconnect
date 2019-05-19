@@ -11,12 +11,12 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN and Pulse Connect Secure
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN i Pulse Connect Secure
 Name:		openconnect
-Version:	8.02
+Version:	8.03
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	e723c92b0d435df2a521549edbe1fe3e
+# Source0-md5:	8425397d8b339fcfb2f7962882501e48
 Patch0:		%{name}-am.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
