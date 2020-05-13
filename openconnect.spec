@@ -11,32 +11,36 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN and Pulse Connect Secure
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN i Pulse Connect Secure
 Name:		openconnect
-Version:	8.04
+Version:	8.09
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	4b61425a06a4ed723fcd075c336a5513
+# Source0-md5:	2922f11267acf8f2330843a1f639a662
 Patch0:		%{name}-am.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
-%{!?with_openssl:BuildRequires:	gnutls-devel >= 2.12.16}
+%{!?with_openssl:BuildRequires:	gnutls-devel >= 3.2.10}
 BuildRequires:	groff
 %{?with_kerberos5:BuildRequires:	heimdal-devel}
 %{?with_java:BuildRequires:	jdk}
+%{?with_openssl:BuildRequires:	libp11-devel >= 0.4.8}
 BuildRequires:	libproxy-devel
+%{!?with_openssl:BuildRequires:	libtasn1-devel}
 BuildRequires:	libxml2-devel >= 2.0
 BuildRequires:	lz4-devel >= 1:1.7
 %{?with_oath:BuildRequires:	oath-toolkit-devel >= 2.2.0}
 %{?with_openssl:BuildRequires:	openssl-devel}
-%{!?with_openssl:BuildRequires:	p11-kit-devel}
+BuildRequires:	p11-kit-devel
 %{?with_pcsc:BuildRequires:	pcsc-lite-devel}
 BuildRequires:	pkgconfig >= 1:0.27
 BuildRequires:	python >= 2
 %{?with_stoken:BuildRequires:	stoken-devel}
+%{!?with_openssl:BuildRequires:	tpm2-tss-devel}
 %{!?with_openssl:BuildRequires:	trousers-devel}
 BuildRequires:	zlib-devel
+%{!?with_openssl:Requires:	gnutls >= 3.2.10}
 %{?with_oath:Requires:	oath-toolkit >= 2.2.0}
 Suggests:	vpnc-script
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -54,7 +58,7 @@ Summary:	Development files for OpenConnect library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki OpenConnect
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%{?with_openssl:Requires:	gnutls-devel >= 2.12.16}
+%{?with_openssl:Requires:	gnutls-devel >= 3.2.10}
 Requires:	libproxy-devel
 Requires:	libxml2-devel >= 2.0
 %{?with_oath:Requires:	oath-toolkit-devel >= 2.2.0}
@@ -93,6 +97,22 @@ JNI wrapper for OpenConnect library.
 %description -n java-openconnect -l pl.UTF-8
 Interfejs JNI do biblioteki OpenConnect.
 
+%package -n bash-completion-openconnect
+Summary:	Bash completion for openconnect arguments
+Summary(pl.UTF-8):	Bashowe dopełnianie argumentów polecenia openconnect
+Group:		Applications/Shells
+Requires:	%{name} = %{version}-%{release}
+Requires:	bash-completion
+%if "%{_rpmversion}" >= "4.6"
+BuildArch:	noarch
+%endif
+
+%description -n bash-completion-openconnect
+Bash completion for openconnect arguments.
+
+%description -n bash-completion-openconnect -l pl.UTF-8
+Bashowe dopełnianie argumentów polecenia openconnect.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -108,8 +128,8 @@ Interfejs JNI do biblioteki OpenConnect.
 	%{?with_static_libs:--enable-static} \
 	%{!?with_kerberos5:--without-gssapi} \
 	%{?with_java:--with-java} \
-	%{!?with_oath:--without-liboath} \
 	%{!?with_pcsc:--without-libpcsclite} \
+	%{!?with_oath:--without-libpskc} \
 	%{!?with_stoken:--without-stoken} \
 	--with-system-cafile=/etc/certs/ca-certificates.crt \
 	--with-vpnc-script=/usr/bin/vpnc-script \
@@ -144,6 +164,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/openconnect
 %attr(755,root,root) %{_libdir}/libopenconnect.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopenconnect.so.5
+%dir %{_libexecdir}/openconnect
+%attr(755,root,root) %{_libexecdir}/openconnect/csd-post.sh
+%attr(755,root,root) %{_libexecdir}/openconnect/csd-wrapper.sh
+%attr(755,root,root) %{_libexecdir}/openconnect/hipreport-android.sh
+%attr(755,root,root) %{_libexecdir}/openconnect/hipreport.sh
+%attr(755,root,root) %{_libexecdir}/openconnect/tncc-wrapper.py
 %{_mandir}/man8/openconnect.8*
 
 %files devel
@@ -164,3 +190,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libopenconnect-wrapper.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopenconnect-wrapper.so.0
 %attr(755,root,root) %{_libdir}/libopenconnect-wrapper.so
+
+%files -n bash-completion-openconnect
+%defattr(644,root,root,755)
+/etc/bash_completion.d/openconnect.bash
