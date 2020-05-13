@@ -147,6 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 # JNI module
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect-wrapper.{la,a}
 
+# uses non-Linux /system/bin/sh
+%{__rm} $RPM_BUILD_ROOT%{_libexecdir}/openconnect/hipreport-android.sh
+
 %find_lang %{name}
 
 %clean
@@ -167,7 +170,6 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libexecdir}/openconnect
 %attr(755,root,root) %{_libexecdir}/openconnect/csd-post.sh
 %attr(755,root,root) %{_libexecdir}/openconnect/csd-wrapper.sh
-%attr(755,root,root) %{_libexecdir}/openconnect/hipreport-android.sh
 %attr(755,root,root) %{_libexecdir}/openconnect/hipreport.sh
 %attr(755,root,root) %{_libexecdir}/openconnect/tncc-wrapper.py
 %{_mandir}/man8/openconnect.8*
