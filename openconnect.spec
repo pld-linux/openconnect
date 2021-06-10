@@ -143,7 +143,10 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect.la
 # JNI module
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect-wrapper.{la,a}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect-wrapper.la
+%if %{with static_libs}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect-wrapper.a
+%endif
 
 # uses non-Linux /system/bin/sh
 %{__rm} $RPM_BUILD_ROOT%{_libexecdir}/openconnect/hipreport-android.sh
