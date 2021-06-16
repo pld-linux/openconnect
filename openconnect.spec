@@ -143,9 +143,11 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect.la
 # JNI module
+%if %{with java}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect-wrapper.la
 %if %{with static_libs}
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libopenconnect-wrapper.a
+%endif
 %endif
 
 # uses non-Linux /system/bin/sh
@@ -189,11 +191,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libopenconnect.a
 %endif
 
+%if %{with java}
 %files -n java-openconnect
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libopenconnect-wrapper.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libopenconnect-wrapper.so.0
 %attr(755,root,root) %{_libdir}/libopenconnect-wrapper.so
+%endif
 
 %files -n bash-completion-openconnect
 %defattr(644,root,root,755)
