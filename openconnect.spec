@@ -11,17 +11,17 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN and Pulse Connect Secure
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN i Pulse Connect Secure
 Name:		openconnect
-Version:	8.10
+Version:	8.20
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	d772c3c68afae12252a5377a99352b97
+# Source0-md5:	26218ee45fea950ebcc65be242f3eb42
 Patch0:		%{name}-am.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
-%{!?with_openssl:BuildRequires:	gnutls-devel >= 3.2.10}
+%{!?with_openssl:BuildRequires:	gnutls-devel >= 3.6.13}
 BuildRequires:	groff
 %{?with_kerberos5:BuildRequires:	heimdal-devel}
 %{?with_java:BuildRequires:	jdk}
@@ -40,7 +40,7 @@ BuildRequires:	python >= 2
 %{!?with_openssl:BuildRequires:	tpm2-tss-devel}
 %{!?with_openssl:BuildRequires:	trousers-devel}
 BuildRequires:	zlib-devel
-%{!?with_openssl:Requires:	gnutls >= 3.2.10}
+%{!?with_openssl:Requires:	gnutls >= 3.6.13}
 %{?with_oath:Requires:	oath-toolkit >= 2.2.0}
 Suggests:	vpnc-script
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -58,7 +58,7 @@ Summary:	Development files for OpenConnect library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki OpenConnect
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%{?with_openssl:Requires:	gnutls-devel >= 3.2.10}
+%{?with_openssl:Requires:	gnutls-devel >= 3.6.13}
 Requires:	libproxy-devel
 Requires:	libxml2-devel >= 2.0
 %{?with_oath:Requires:	oath-toolkit-devel >= 2.2.0}
