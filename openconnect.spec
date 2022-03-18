@@ -18,6 +18,7 @@ Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
 # Source0-md5:	26218ee45fea950ebcc65be242f3eb42
 Patch0:		%{name}-am.patch
+Patch1:		%{name}-x32.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
@@ -114,6 +115,7 @@ Bashowe dopełnianie argumentów polecenia openconnect.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}

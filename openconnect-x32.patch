@@ -1,0 +1,24 @@
+--- openconnect-8.20/vhost.c.orig	2021-07-27 15:49:16.000000000 +0200
++++ openconnect-8.20/vhost.c	2022-03-18 06:33:02.298507500 +0100
+@@ -89,9 +89,9 @@ static int setup_vring(struct openconnec
+ 
+ 	struct vhost_vring_addr va = { };
+ 	va.index = idx;
+-	va.desc_user_addr = (uint64_t)vring->desc;
+-	va.avail_user_addr = (uint64_t)vring->avail;
+-	va.used_user_addr  = (uint64_t)vring->used;
++	va.desc_user_addr = (uintptr_t)vring->desc;
++	va.avail_user_addr = (uintptr_t)vring->avail;
++	va.used_user_addr  = (uintptr_t)vring->used;
+ 	if (ioctl(vpninfo->vhost_fd, VHOST_SET_VRING_ADDR, &va) < 0) {
+ 		ret = -errno;
+ 		vpn_progress(vpninfo, PRG_ERR, _("Failed to set vring #%d base: %s\n"),
+@@ -457,7 +457,7 @@ static inline int process_ring(struct op
+ 
+ 		if (!tx)
+ 			ring->desc[desc].flags = vio16(VRING_DESC_F_WRITE);
+-		ring->desc[desc].addr = vio64((uint64_t)this + pkt_offset(virtio.h));
++		ring->desc[desc].addr = vio64((uintptr_t)this + pkt_offset(virtio.h));
+ 		ring->desc[desc].len = vio32(this->len + sizeof(this->virtio.h));
+ 		barrier();
+ 
