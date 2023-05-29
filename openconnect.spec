@@ -11,14 +11,13 @@
 Summary:	Client for Cisco's AnyConnect SSL VPN and Pulse Connect Secure
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN i Pulse Connect Secure
 Name:		openconnect
-Version:	8.20
+Version:	9.12
 Release:	1
 License:	LGPL v2.1
 Group:		Applications/Networking
 Source0:	ftp://ftp.infradead.org/pub/openconnect/%{name}-%{version}.tar.gz
-# Source0-md5:	26218ee45fea950ebcc65be242f3eb42
+# Source0-md5:	39060dcb58ebfb261bb6faf17755b98b
 Patch0:		%{name}-am.patch
-Patch1:		%{name}-x32.patch
 URL:		http://www.infradead.org/openconnect.html
 BuildRequires:	autoconf >= 2.63
 BuildRequires:	automake >= 1:1.10
@@ -37,6 +36,8 @@ BuildRequires:	p11-kit-devel
 %{?with_pcsc:BuildRequires:	pcsc-lite-devel}
 BuildRequires:	pkgconfig >= 1:0.27
 BuildRequires:	python >= 2
+BuildRequires:	rpm-build >= 4.6
+BuildRequires:	rpmbuild(macros) >= 1.673
 %{?with_stoken:BuildRequires:	stoken-devel}
 %{!?with_openssl:BuildRequires:	tpm2-tss-devel}
 %{!?with_openssl:BuildRequires:	trousers-devel}
@@ -103,7 +104,7 @@ Summary:	Bash completion for openconnect arguments
 Summary(pl.UTF-8):	Bashowe dopełnianie argumentów polecenia openconnect
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
-Requires:	bash-completion >= 2.0
+Requires:	bash-completion >= 1:2.0
 BuildArch:	noarch
 
 %description -n bash-completion-openconnect
@@ -115,7 +116,6 @@ Bashowe dopełnianie argumentów polecenia openconnect.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %build
 %{__libtoolize}
