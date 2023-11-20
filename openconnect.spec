@@ -8,6 +8,9 @@
 %bcond_without	stoken		# Software Token authentication
 %bcond_without	static_libs	# static library
 #
+
+%{?with_java:%{?use_default_jdk}}
+
 Summary:	Client for Cisco's AnyConnect SSL VPN and Pulse Connect Secure
 Summary(pl.UTF-8):	Klient Cisco AnyConnect SSL VPN i Pulse Connect Secure
 Name:		openconnect
@@ -25,7 +28,7 @@ BuildRequires:	automake >= 1:1.10
 %{!?with_openssl:BuildRequires:	gnutls-devel >= 3.6.13}
 BuildRequires:	groff
 %{?with_kerberos5:BuildRequires:	heimdal-devel}
-%{?with_java:BuildRequires:	jdk}
+%{?with_java:%buildrequires_jdk}
 %{?with_openssl:BuildRequires:	libp11-devel >= 0.4.8}
 BuildRequires:	libproxy-devel
 %{!?with_openssl:BuildRequires:	libtasn1-devel}
@@ -38,7 +41,7 @@ BuildRequires:	p11-kit-devel
 BuildRequires:	pkgconfig >= 1:0.27
 BuildRequires:	python >= 2
 BuildRequires:	rpm-build >= 4.6
-BuildRequires:	rpmbuild(macros) >= 1.673
+BuildRequires:	rpmbuild(macros) >= 2.021
 %{?with_stoken:BuildRequires:	stoken-devel}
 %{!?with_openssl:BuildRequires:	tpm2-tss-devel}
 %{!?with_openssl:BuildRequires:	trousers-devel}
@@ -120,6 +123,7 @@ Bashowe dopełnianie argumentów polecenia openconnect.
 %patch1 -p1
 
 %build
+%{?with_java:export JAVA_HOME="%{java_home}"}
 %{__libtoolize}
 %{__aclocal} -I m4
 %{__autoconf}
