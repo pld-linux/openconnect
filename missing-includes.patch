@@ -1,0 +1,11 @@
+--- openconnect-9.12/gpst.c.orig	2023-05-19 18:12:15.000000000 +0200
++++ openconnect-9.12/gpst.c	2023-11-20 01:41:34.372670390 +0100
+@@ -19,6 +19,8 @@
+ 
+ #include "openconnect-internal.h"
+ 
++#include <libxml/parser.h>
++
+ #if HAVE_JSON
+ #include "json.h"
+ #endif
